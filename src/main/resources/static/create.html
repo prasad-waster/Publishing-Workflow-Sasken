@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Create Blog Post</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 font-sans text-[#101419]">
+    <!-- Header -->
+    <header
+      class="flex justify-between items-center px-10 py-4 bg-white shadow-md"
+    >
+      <div class="flex items-center gap-2 text-xl font-bold text-blue-700">
+        <svg class="w-6 h-6 fill-current" viewBox="0 0 48 48">
+          <path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" />
+        </svg>
+        BlogCraft
+      </div>
+      <nav class="flex gap-6 text-sm font-medium">
+        <a href="index.html" class="hover:text-blue-500">Home</a>
+        <a href="create.html" class="hover:text-blue-500">Create Post</a>
+        <a href="drafts.html" class="hover:text-blue-500">Drafts</a>
+        <a href="dashboard.html" class="hover:text-blue-500"
+          >Content Dashboard</a
+        >
+        <a href="posts.html" class="hover:text-blue-500">All Posts</a>
+        <a href="review.html" class="hover:text-blue-500">Review Panel</a>
+      </nav>
+    </header>
+
+    <!-- Blog Form -->
+    <main class="max-w-4xl mx-auto p-6 mt-6 bg-white rounded-xl shadow">
+      <h1 class="text-2xl font-bold mb-6">Create a Blog Post</h1>
+
+      <form id="blogForm">
+        <div class="mb-4">
+          <label for="author" class="block font-semibold mb-1">Author</label>
+          <select
+            id="author"
+            name="author"
+            class="w-full p-3 border rounded-lg"
+          >
+            <option value="1">Sophia Carter</option>
+            <option value="2">John Doe</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="title" class="block font-semibold mb-1">Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            required
+            class="w-full p-3 border rounded-lg"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="content" class="block font-semibold mb-1">Content</label>
+          <textarea
+            id="content"
+            name="content"
+            rows="10"
+            required
+            class="w-full p-3 border rounded-lg resize-none"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-between gap-4">
+          <button
+            type="button"
+            onclick="submitPost('DRAFT')"
+            class="bg-gray-300 hover:bg-gray-400 text-black px-6 py-2 rounded-lg font-bold"
+          >
+            Save Draft
+          </button>
+
+          <button
+            type="button"
+            onclick="submitPost('REVIEW')"
+            class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg font-bold"
+          >
+            Send to Review
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <script>
+      async function submitPost() {
+        const title = document.getElementById("title").value.trim();
+        const content = document.getElementById("content").value.trim();
+        const authorId = 1; // Simulated author ID
+
+        if (!title || !content) {
+          alert("Title and content are required.");
+          return;
+        }
+
+        // Step 1: Save post as DRAFT
+        const response = await fetch("http://localhost:8080/api/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, content, authorId }),
+        });
+
+        if (!response.ok) {
+          alert("Failed to save post.");
+          return;
+        }
+
+        const savedPost = await response.json();
+
+        // Step 2: Change status from DRAFT to REVIEW
+        const statusRes = await fetch(
+          `http://localhost:8080/api/posts/${savedPost.id}/status?status=REVIEW&userId=${authorId}`,
+          { method: "PUT" }
+        );
+
+        if (statusRes.ok) {
+          alert("Blog submitted for review!");
+          window.location.href = "posts.html";
+        } else {
+          alert("Saved as draft, but failed to send to review.");
+        }
+      }
+    </script>
+  </body>
+</html>

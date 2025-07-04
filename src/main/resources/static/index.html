@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>BlogCraft Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Header -->
+    <header
+      class="flex justify-between items-center px-10 py-4 bg-white shadow-md"
+    >
+      <div class="flex items-center gap-2 text-xl font-bold text-blue-700">
+        <svg class="w-6 h-6 fill-current" viewBox="0 0 48 48">
+          <path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" />
+        </svg>
+        BlogCraft
+      </div>
+      <nav class="flex gap-6 text-sm font-medium">
+        <a href="index.html" class="hover:text-blue-500">Home</a>
+        <a href="create.html" class="hover:text-blue-500">Create Post</a>
+        <a href="drafts.html" class="hover:text-blue-500">Drafts</a>
+        <a href="dashboard.html" class="hover:text-blue-500"
+          >Content Dashboard</a
+        >
+        <a href="posts.html" class="hover:text-blue-500">All Posts</a>
+        <a href="review.html" class="hover:text-blue-500">Review Panel</a>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="max-w-5xl mx-auto py-12 px-4">
+      <h1 class="text-4xl font-bold mb-6 text-gray-800">
+        Welcome to BlogCraft 📝
+      </h1>
+      <p class="text-lg text-gray-600 mb-10">
+        A collaborative platform for writing, reviewing, and publishing blog
+        posts across your organization.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <a
+          href="create.html"
+          class="p-6 bg-white rounded-lg shadow hover:shadow-lg transition block"
+        >
+          <h2 class="text-xl font-semibold mb-2">✍️ Create Blog Post</h2>
+          <p>
+            Create and save blog drafts. Submit them for review and collaborate
+            with co-authors.
+          </p>
+        </a>
+
+        <a
+          href="drafts.html"
+          class="p-6 bg-white rounded-lg shadow hover:shadow-lg transition block"
+        >
+          <h2 class="text-xl font-semibold mb-2">📝 Drafts</h2>
+          <p>
+            View and manage your draft blog posts. Edit, delete, or send them
+            for review.
+          </p>
+        </a>
+
+        <a
+          href="posts.html"
+          class="p-6 bg-white rounded-lg shadow hover:shadow-lg transition block"
+        >
+          <h2 class="text-xl font-semibold mb-2">📚 All Posts</h2>
+          <p>
+            View, update status, track history, and comment on all submitted
+            blog posts.
+          </p>
+        </a>
+
+        <a
+          href="dashboard.html"
+          class="p-6 bg-white rounded-lg shadow hover:shadow-lg transition block"
+        >
+          <h2 class="text-xl font-semibold mb-2">📊 Content Dashboard</h2>
+          <p>
+            Monitor engagement metrics, views, and status of all published
+            content.
+          </p>
+        </a>
+      </div>
+    </main>
+  </body>
+</html>
