@@ -15,20 +15,19 @@ async function loadAllPosts() {
 
     posts.forEach((post) => {
       const div = document.createElement("div");
-      div.className = "bg-white p-5 rounded shadow";
+      div.className = "bg-white p-6 rounded-2xl shadow flex flex-col gap-2 relative overflow-hidden border border-gray-100";
 
       div.innerHTML = `
-        <h2 class="text-xl font-semibold text-blue-800 mb-1">${post.title}</h2>
-        <p class="text-gray-700 mb-2">${post.content}</p>
-        <p class="text-sm text-gray-500">Status: <strong>${
-          post.status
-        }</strong></p>
-        <p class="text-xs text-gray-400">Created at: ${formatDate(
-          post.createdAt
-        )}</p>
-        <p class="text-xs text-gray-400">Updated at: ${formatDate(
-          post.updatedAt
-        )}</p>
+        <h2 class="text-xl font-semibold text-blue-800 mb-2">${post.title}</h2>
+        <div class="prose max-w-none mb-3 post-content">${post.content}</div>
+        <div class="text-sm text-gray-600 font-semibold mt-2 mb-1">${post.author ? `Author: ${post.author}` : ''}</div>
+        <div class="flex flex-wrap justify-between items-end mt-2">
+          <div>
+            <span class="inline-block bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full mr-2">Status: <strong>${post.status}</strong></span>
+            <span class="text-xs text-gray-400">Created: ${formatDate(post.createdAt)}</span>
+            <span class="text-xs text-gray-400 ml-2">Updated: ${formatDate(post.updatedAt)}</span>
+          </div>
+        </div>
       `;
 
       container.appendChild(div);

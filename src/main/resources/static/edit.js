@@ -5,14 +5,18 @@ async function loadPost() {
   const post = await res.json();
 
   document.getElementById("title").value = post.title;
-  document.getElementById("content").value = post.content;
-  document.getElementById("author").value = post.authorId;
+  if (window.tinymce) {
+    tinymce.get('content').setContent(post.content);
+  } else {
+    document.getElementById("content").value = post.content;
+  }
+  document.getElementById("author").value = post.author || '';
 }
 
 async function updateDraft(sendToReview = false) {
   const title = document.getElementById("title").value.trim();
-  const content = document.getElementById("content").value.trim();
-  const authorId = parseInt(document.getElementById("author").value);
+  const content = window.tinymce ? tinymce.get('content').getContent() : document.getElementById("content").value.trim();
+  const author = document.getElementById("author").value.trim();
 
   if (!title || !content) {
     alert("Title and content are required.");
@@ -27,7 +31,7 @@ async function updateDraft(sendToReview = false) {
       id: postId,
       title,
       content,
-      authorId,
+      author,
     }),
   });
 
@@ -39,7 +43,7 @@ async function updateDraft(sendToReview = false) {
   // If Send to Review
   if (sendToReview) {
     const statusRes = await fetch(
-      `http://localhost:8080/api/posts/${postId}/status?status=REVIEW&userId=${authorId}`,
+      `http://localhost:8080/api/posts/${postId}/status?status=REVIEW&author=${encodeURIComponent(author)}`,
       {
         method: "PUT",
       }

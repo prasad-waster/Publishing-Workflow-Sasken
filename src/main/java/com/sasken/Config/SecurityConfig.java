@@ -14,6 +14,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/index.html", "/script.js", "/style.css", "/api/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll() // Allow access to uploaded files
                 .requestMatchers("/actuator/**").permitAll() // Allow actuator endpoints
                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**").permitAll() // Allow Swagger UI
                 .anyRequest().permitAll()

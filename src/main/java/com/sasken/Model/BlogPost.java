@@ -37,5 +37,5 @@ public class BlogPost {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private Long authorId;
+    private String author;
 }
