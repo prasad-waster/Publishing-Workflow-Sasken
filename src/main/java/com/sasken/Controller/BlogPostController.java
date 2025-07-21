@@ -85,10 +85,9 @@ public class BlogPostController {
         @Parameter(description = "New status for the post", required = true, 
                    schema = @Schema(allowableValues = {"DRAFT", "REVIEW", "APPROVED", "PUBLISHED"}))
         @RequestParam PostStatus status,
-        @Parameter(description = "ID of the user making the change", required = true)
-        @RequestParam Long userId
+        @RequestParam(required = false) String author
     ) {
-        return ResponseEntity.ok(service.changeStatus(postId, status, userId));
+        return ResponseEntity.ok(service.changeStatus(postId, status, author));
     }
 
     @GetMapping

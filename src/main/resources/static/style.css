@@ -9,3 +9,28 @@ h1 {
   text-align: center;
   color: #2c3e50;
 }
+
+/* Polished post card styles */
+.post-content img, .post-content video {
+  display: block;
+  margin: 1.5em auto;
+  max-width: 100%;
+  border-radius: 0.75em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.post-content p {
+  margin-bottom: 1em;
+  line-height: 1.7;
+}
+.author-badge {
+  font-size: 0.95em;
+  color: #555;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.prose {
+  font-family: inherit;
+  font-size: 1.08em;
+  color: #222;
+}

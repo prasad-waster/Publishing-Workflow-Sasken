@@ -25,7 +25,7 @@ public class BlogPostService {
         return blogPostRepo.save(post);
     }
 
-    public BlogPost changeStatus(Long postId, PostStatus newStatus, Long userId) {
+    public BlogPost changeStatus(Long postId, PostStatus newStatus, String author) {
         BlogPost post = blogPostRepo.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found"));
 
@@ -34,6 +34,9 @@ public class BlogPostService {
         if (isValidTransition(currentStatus, newStatus)) {
             post.setStatus(newStatus);
             post.setUpdatedAt(LocalDateTime.now());
+            if (author != null && !author.isEmpty()) {
+                post.setAuthor(author);
+            }
             return blogPostRepo.save(post);
         } else {
             throw new IllegalStateException("Invalid status transition from " + currentStatus + " to " + newStatus);
@@ -61,15 +64,16 @@ public class BlogPostService {
     }
 
     public BlogPost updatePost(Long postId, BlogPost updatedPost) {
-    BlogPost existing = blogPostRepo.findById(postId)
-            .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+        BlogPost existing = blogPostRepo.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
 
-    existing.setTitle(updatedPost.getTitle());
-    existing.setContent(updatedPost.getContent());
-    existing.setUpdatedAt(LocalDateTime.now());
+        existing.setTitle(updatedPost.getTitle());
+        existing.setContent(updatedPost.getContent());
+        existing.setAuthor(updatedPost.getAuthor());
+        existing.setUpdatedAt(LocalDateTime.now());
 
-    return blogPostRepo.save(existing);
-}
+        return blogPostRepo.save(existing);
+    }
 
 
 }
