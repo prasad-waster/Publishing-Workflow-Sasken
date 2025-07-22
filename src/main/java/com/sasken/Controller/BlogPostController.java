@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sasken.Model.BlogPost;
@@ -28,6 +31,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -61,10 +66,7 @@ public class BlogPostController {
         @ApiResponse(responseCode = "400", description = "Invalid input data"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<BlogPost> createPost(
-        @Parameter(description = "Blog post object to create", required = true)
-        @RequestBody BlogPost post
-    ) {
+    public ResponseEntity<BlogPost> createPost(@Valid @RequestBody BlogPost post) {
         return ResponseEntity.ok(service.createDraft(post));
     }
 
@@ -81,12 +83,12 @@ public class BlogPostController {
     })
     public ResponseEntity<BlogPost> changeStatus(
         @Parameter(description = "ID of the post to update", required = true)
-        @PathVariable Long postId,
+            @PathVariable Long postId,
         @Parameter(description = "New status for the post", required = true, 
                    schema = @Schema(allowableValues = {"DRAFT", "REVIEW", "APPROVED", "PUBLISHED"}))
-        @RequestParam PostStatus status,
+            @RequestParam PostStatus status,
         @Parameter(description = "ID of the user making the change", required = true)
-        @RequestParam Long userId
+            @RequestParam Long userId
     ) {
         return ResponseEntity.ok(service.changeStatus(postId, status, userId));
     }
@@ -135,7 +137,7 @@ public class BlogPostController {
         @Parameter(description = "ID of the post to delete", required = true)
         @PathVariable Long postId
     ) {
-        service.deletePost(postId);
+    service.deletePost(postId);
         return ResponseEntity.ok("Deleted");
     }
 
@@ -155,6 +157,25 @@ public class BlogPostController {
         @Parameter(description = "Updated blog post data", required = true)
         @RequestBody BlogPost updatedPost
     ) {
-        return ResponseEntity.ok(service.updatePost(postId, updatedPost));
+    return ResponseEntity.ok(service.updatePost(postId, updatedPost));
+    }
+
+    // Exception Handlers for REST API
+    @ExceptionHandler(jakarta.persistence.EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleNotFound() {
+        // Returns 404 Not Found
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public void handleIllegalState() {
+        // Returns 500 Internal Server Error
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleValidationExceptions() {
+        // Returns 400 Bad Request
     }
 }

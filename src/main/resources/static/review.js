@@ -2,17 +2,17 @@ const API_BASE = "http://localhost:8080/api/posts";
 
 async function loadReviewPosts() {
   try {
-    const res = await fetch(API_BASE);
-    const posts = await res.json();
-    const reviewPosts = posts.filter((p) => p.status === "REVIEW");
+  const res = await fetch(API_BASE);
+  const posts = await res.json();
+  const reviewPosts = posts.filter((p) => p.status === "REVIEW");
 
-    const container = document.getElementById("review-posts");
-    container.innerHTML = "";
+  const container = document.getElementById("review-posts");
+  container.innerHTML = "";
 
     // Update stats
     document.getElementById("pending-count").textContent = reviewPosts.length;
 
-    if (reviewPosts.length === 0) {
+  if (reviewPosts.length === 0) {
       container.innerHTML = `
         <div class="text-center py-12">
           <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -24,14 +24,14 @@ async function loadReviewPosts() {
           <p class="text-gray-600">All posts have been reviewed or are in other stages.</p>
         </div>
       `;
-      return;
-    }
+    return;
+  }
 
-    reviewPosts.forEach((post) => {
-      const div = document.createElement("div");
+  reviewPosts.forEach((post) => {
+    const div = document.createElement("div");
       div.className = "bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden";
       
-      div.innerHTML = `
+    div.innerHTML = `
         <div class="p-6">
           <div class="flex items-start justify-between mb-4">
             <div class="flex-1">
@@ -71,7 +71,7 @@ async function loadReviewPosts() {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
               Approve Post
-            </button>
+      </button>
             
             <button 
               onclick="changeStatus(${post.id}, 'DRAFT')"
@@ -81,13 +81,13 @@ async function loadReviewPosts() {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
               Revert to Draft
-            </button>
+      </button>
           </div>
         </div>
-      `;
+    `;
       
-      container.appendChild(div);
-    });
+    container.appendChild(div);
+  });
   } catch (error) {
     console.error("Error loading review posts:", error);
     document.getElementById("review-posts").innerHTML = `
@@ -108,7 +108,7 @@ async function changeStatus(postId, newStatus) {
   try {
     const reviewerId = 2; // Simulated reviewer ID
     const res = await fetch(
-      `${API_BASE}/${postId}/status?status=${newStatus}&userId=${reviewerId}`,
+    `${API_BASE}/${postId}/status?status=${newStatus}&userId=${reviewerId}`,
       { method: "PUT" }
     );
 

@@ -41,7 +41,7 @@ async function loadApprovedPosts() {
     approvedPosts.forEach((post) => {
       const div = document.createElement("div");
       div.className = "bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden";
-      
+
       div.innerHTML = `
         <div class="p-6">
           <div class="flex items-start justify-between mb-4">
@@ -82,7 +82,7 @@ async function loadApprovedPosts() {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
               </svg>
               Publish Now
-            </button>
+          </button>
             
             <button 
               onclick="changeStatus(${post.id}, 'REVIEW')"
@@ -92,11 +92,11 @@ async function loadApprovedPosts() {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
               Send Back to Review
-            </button>
+          </button>
           </div>
         </div>
       `;
-      
+
       container.appendChild(div);
     });
   } catch (err) {
