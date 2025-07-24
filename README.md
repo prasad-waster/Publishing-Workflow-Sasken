@@ -87,15 +87,6 @@ DRAFT → REVIEW → APPROVED → PUBLISHED
 
 ---
 
-## 🖼️ Demonstration
-
-![Publishing Workflow Screenshot](./screenshots/demo.png)  
-_Example: Draft creation, review panel, and publishing interface._
-
-> *(Make sure to add your actual screenshot to a `screenshots/` folder for GitHub preview)*
-
----
-
 ## 📦 How to Run the Project
 
 1. **Clone the repo**  
