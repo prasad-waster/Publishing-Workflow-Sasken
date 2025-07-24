@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Comments - BlogCraft</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="comments.js"></script>
+</head>
+<body class="bg-gray-100 p-10">
+  <h1 class="text-2xl font-bold mb-6">Feedback / Suggestions</h1>
+
+  <div class="space-y-4" id="comment-section">
+    <!-- Existing comments will load here -->
+  </div>
+
+  <div class="mt-8">
+    <textarea id="new-comment" placeholder="Write your suggestion..." class="w-full p-4 border rounded-lg"></textarea>
+    <input type="text" id="comment-user" class="mt-2 p-2 border rounded w-full" placeholder="Your Name">
+    <button onclick="addComment()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">💬 Submit</button>
+  </div>
+</body>
+</html>
