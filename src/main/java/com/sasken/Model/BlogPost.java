@@ -1,8 +1,10 @@
 package com.sasken.Model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -41,4 +43,19 @@ public class BlogPost {
     private LocalDateTime updatedAt;
 
     private Long authorId;
+
+    private int likes;
+    @ElementCollection
+    private List<String> comments;
+
+    private int views;
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
 }
