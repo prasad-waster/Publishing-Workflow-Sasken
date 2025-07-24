@@ -50,9 +50,19 @@ collabtool/
 
 ## Screenshots
 
-📄 Create/Edit Draft
-💬 Add Comments
-🧾 View All Drafts
+## 🖼️ Screenshots
+
+### 🧾 BlogCraft Overview
+![BlogCraft](blogcraft.png)
+
+### 🤝 Collaboration Tool UI
+![Collaboration Tool](collabtool.png)
+
+### 💬 Comments Interface
+![Comments](comments.png)
+
+### ✍️ Draft Creation
+![Draft](draft.png)
 
 ---
 
