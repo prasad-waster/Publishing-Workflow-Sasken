@@ -2,26 +2,15 @@ package com.sasken.Controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.sasken.dto.CommentRequest;
+import com.sasken.dto.DashboardStatsDTO;
 import com.sasken.Model.BlogPost;
 import com.sasken.Model.PostStatus;
 import com.sasken.Service.BlogPostService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,9 +19,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -40,17 +29,21 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 @Tag(name = "Blog Posts", description = "Blog post management endpoints")
 public class BlogPostController {
 
+    private final BlogPostService blogPostService;
+
+    public BlogPostController(BlogPostService blogPostService) {
+        this.blogPostService = blogPostService;
+    }
+
     @Autowired
     private BlogPostService service;
 
     @PostMapping
-    @Operation(
-        summary = "Create a new blog post",
-        description = "Creates a new blog post and saves it as a draft. The post will be assigned to the specified author."
-    )
+    @Operation(summary = "Create a new blog post",
+        description = "Creates a new blog post and saves it as a draft. The post will be assigned to the specified author.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Post created successfully",
-            content = @Content(mediaType = "application/json", 
+            content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = BlogPost.class),
                 examples = @ExampleObject(value = """
                     {
@@ -62,7 +55,7 @@ public class BlogPostController {
                       "updatedAt": "2024-01-15T10:30:00",
                       "authorId": 1
                     }
-                    """))),
+                """))),
         @ApiResponse(responseCode = "400", description = "Invalid input data"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
@@ -71,10 +64,8 @@ public class BlogPostController {
     }
 
     @PutMapping("/{postId}/status")
-    @Operation(
-        summary = "Change post status",
-        description = "Changes the status of a blog post. Valid transitions: DRAFT → REVIEW → APPROVED → PUBLISHED"
-    )
+    @Operation(summary = "Change post status",
+        description = "Changes the status of a blog post. Valid transitions: DRAFT → REVIEW → APPROVED → PUBLISHED")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Status changed successfully"),
         @ApiResponse(responseCode = "400", description = "Invalid status transition"),
@@ -82,22 +73,15 @@ public class BlogPostController {
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<BlogPost> changeStatus(
-        @Parameter(description = "ID of the post to update", required = true)
-            @PathVariable Long postId,
-        @Parameter(description = "New status for the post", required = true, 
-                   schema = @Schema(allowableValues = {"DRAFT", "REVIEW", "APPROVED", "PUBLISHED"}))
-            @RequestParam PostStatus status,
-        @Parameter(description = "ID of the user making the change", required = true)
-            @RequestParam Long userId
-    ) {
+        @Parameter(description = "ID of the post to update", required = true) @PathVariable Long postId,
+        @Parameter(description = "New status for the post", required = true,
+            schema = @Schema(allowableValues = {"DRAFT", "REVIEW", "APPROVED", "PUBLISHED"})) @RequestParam PostStatus status,
+        @Parameter(description = "ID of the user making the change", required = true) @RequestParam Long userId) {
         return ResponseEntity.ok(service.changeStatus(postId, status, userId));
     }
 
     @GetMapping
-    @Operation(
-        summary = "Get all blog posts",
-        description = "Retrieves a list of all blog posts in the system"
-    )
+    @Operation(summary = "Get all blog posts", description = "Retrieves a list of all blog posts in the system")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Posts retrieved successfully"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
@@ -107,75 +91,86 @@ public class BlogPostController {
     }
 
     @GetMapping("/{postId}")
-    @Operation(
-        summary = "Get a specific blog post",
-        description = "Retrieves a specific blog post by its ID"
-    )
+    @Operation(summary = "Get a specific blog post", description = "Retrieves a specific blog post by its ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Post retrieved successfully"),
         @ApiResponse(responseCode = "404", description = "Post not found"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<BlogPost> getOne(
-        @Parameter(description = "ID of the post to retrieve", required = true)
-        @PathVariable Long postId
-    ) {
+    public ResponseEntity<BlogPost> getOne(@Parameter(description = "ID of the post to retrieve", required = true)
+                                           @PathVariable Long postId) {
         return ResponseEntity.ok(service.getPost(postId));
     }
 
     @DeleteMapping("/{postId}")
-    @Operation(
-        summary = "Delete a blog post",
-        description = "Permanently deletes a blog post from the system"
-    )
+    @Operation(summary = "Delete a blog post", description = "Permanently deletes a blog post from the system")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Post deleted successfully"),
         @ApiResponse(responseCode = "404", description = "Post not found"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<String> deletePost(
-        @Parameter(description = "ID of the post to delete", required = true)
-        @PathVariable Long postId
-    ) {
-    service.deletePost(postId);
+    public ResponseEntity<String> deletePost(@Parameter(description = "ID of the post to delete", required = true)
+                                             @PathVariable Long postId) {
+        service.deletePost(postId);
         return ResponseEntity.ok("Deleted");
     }
 
     @PutMapping("/{postId}")
-    @Operation(
-        summary = "Update a blog post",
-        description = "Updates an existing blog post with new content"
-    )
+    @Operation(summary = "Update a blog post", description = "Updates an existing blog post with new content")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Post updated successfully"),
         @ApiResponse(responseCode = "404", description = "Post not found"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<BlogPost> updatePost(
-        @Parameter(description = "ID of the post to update", required = true)
-        @PathVariable Long postId,
-        @Parameter(description = "Updated blog post data", required = true)
-        @RequestBody BlogPost updatedPost
-    ) {
-    return ResponseEntity.ok(service.updatePost(postId, updatedPost));
+    public ResponseEntity<BlogPost> updatePost(@Parameter(description = "ID of the post to update", required = true)
+                                               @PathVariable Long postId,
+                                               @Parameter(description = "Updated blog post data", required = true)
+                                               @RequestBody BlogPost updatedPost) {
+        return ResponseEntity.ok(service.updatePost(postId, updatedPost));
     }
 
-    // Exception Handlers for REST API
+    // Exception Handlers
     @ExceptionHandler(jakarta.persistence.EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handleNotFound() {
-        // Returns 404 Not Found
-    }
+    public void handleNotFound() {}
 
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public void handleIllegalState() {
-        // Returns 500 Internal Server Error
-    }
+    public void handleIllegalState() {}
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handleValidationExceptions() {
-        // Returns 400 Bad Request
+    public void handleValidationExceptions() {}
+
+    @PostMapping("/{postId}/like")
+    @Operation(summary = "Like a blog post", description = "Increments the like count for a blog post")
+    public ResponseEntity<BlogPost> likePost(@PathVariable Long postId) {
+        BlogPost updatedPost = service.incrementLikes(postId);
+        return ResponseEntity.ok(updatedPost);
+    }
+
+    @PostMapping("/{postId}/comment")
+    @Operation(summary = "Add a comment to a blog post", description = "Adds a new comment to the specified blog post")
+    public ResponseEntity<BlogPost> addComment(@PathVariable Long postId,
+                                               @RequestBody CommentRequest commentRequest) {
+        BlogPost updatedPost = service.addComment(postId, commentRequest.getComment());
+        return ResponseEntity.ok(updatedPost);
+    }
+
+    @PutMapping("/{id}/view")
+    public ResponseEntity<BlogPost> incrementViews(@PathVariable Long id) {
+        BlogPost updated = service.incrementViews(id);
+        return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/search")
+    public List<BlogPost> searchPosts(@RequestParam String query) {
+        return blogPostService.searchPublishedPosts(query);
+    }
+
+    // ✅ New endpoint for dashboard stats (summary cards)
+    @GetMapping("/dashboard/stats")
+    public ResponseEntity<DashboardStatsDTO> getDashboardStats() {
+        return ResponseEntity.ok(service.getDashboardStats());
     }
 }
