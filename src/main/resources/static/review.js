@@ -29,13 +29,16 @@ async function loadReviewPosts() {
 
     reviewPosts.forEach((post) => {
       const div = document.createElement("div");
-      div.className = "bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden";
-      
+      div.className =
+        "bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden";
+
       div.innerHTML = `
         <div class="p-6">
           <div class="flex items-start justify-between mb-4">
             <div class="flex-1">
-              <h3 class="text-xl font-semibold text-gray-900 mb-2">${post.title}</h3>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">${
+                post.title
+              }</h3>
               <div class="flex items-center gap-4 text-sm text-gray-500 mb-3">
                 <span class="flex items-center gap-1">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,7 +62,9 @@ async function loadReviewPosts() {
           </div>
           
           <div class="bg-gray-50 rounded-lg p-4 mb-6">
-            <p class="text-gray-700 leading-relaxed line-clamp-3">${post.content}</p>
+            <p class="text-gray-700 leading-relaxed line-clamp-3">${
+              post.content
+            }</p>
           </div>
           
           <div class="flex flex-col sm:flex-row gap-3">
@@ -71,7 +76,7 @@ async function loadReviewPosts() {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
               Approve Post
-            </button>
+      </button>
             
             <button 
               onclick="changeStatus(${post.id}, 'DRAFT')"
@@ -81,11 +86,11 @@ async function loadReviewPosts() {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
               Revert to Draft
-            </button>
+      </button>
           </div>
         </div>
-      `;
-      
+    `;
+
       container.appendChild(div);
     });
   } catch (error) {
@@ -114,32 +119,37 @@ async function changeStatus(postId, newStatus) {
 
     if (res.ok) {
       // Show success message
-      const message = newStatus === 'APPROVED' ? 'Post approved successfully!' : 'Post reverted to draft.';
-      showNotification(message, 'success');
-      
+      const message =
+        newStatus === "APPROVED"
+          ? "Post approved successfully!"
+          : "Post reverted to draft.";
+      showNotification(message, "success");
+
       // Reload posts
       loadReviewPosts();
     } else {
-      showNotification('Failed to update status. Please try again.', 'error');
+      showNotification("Failed to update status. Please try again.", "error");
     }
   } catch (error) {
     console.error("Error changing status:", error);
-    showNotification('Network error. Please check your connection.', 'error');
+    showNotification("Network error. Please check your connection.", "error");
   }
 }
 
-function showNotification(message, type = 'info') {
+function showNotification(message, type = "info") {
   // Create notification element
-  const notification = document.createElement('div');
+  const notification = document.createElement("div");
   notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 ${
-    type === 'success' ? 'bg-green-500 text-white' : 
-    type === 'error' ? 'bg-red-500 text-white' : 
-    'bg-blue-500 text-white'
+    type === "success"
+      ? "bg-green-500 text-white"
+      : type === "error"
+      ? "bg-red-500 text-white"
+      : "bg-blue-500 text-white"
   }`;
   notification.textContent = message;
-  
+
   document.body.appendChild(notification);
-  
+
   // Remove notification after 3 seconds
   setTimeout(() => {
     notification.remove();
@@ -148,12 +158,12 @@ function showNotification(message, type = 'info') {
 
 function formatDate(dateString) {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 

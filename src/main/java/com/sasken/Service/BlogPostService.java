@@ -43,7 +43,7 @@ public class BlogPostService {
     private boolean isValidTransition(PostStatus current, PostStatus next) {
     return (current == PostStatus.DRAFT && next == PostStatus.REVIEW) ||
            (current == PostStatus.REVIEW && (next == PostStatus.APPROVED || next == PostStatus.DRAFT)) ||
-           (current == PostStatus.APPROVED && (next == PostStatus.PUBLISHED || next == PostStatus.REVIEW)); // <-- ADD THIS
+           (current == PostStatus.APPROVED && (next == PostStatus.PUBLISHED || next == PostStatus.REVIEW));
     }
 
 
