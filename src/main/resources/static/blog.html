@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blog Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow">
+    <h1 id="title" class="text-3xl font-bold text-gray-900 mb-2">Loading...</h1>
+    <p id="date" class="text-sm text-gray-500 mb-4"></p>
+    <div id="content" class="text-gray-800 mb-4"></div>
+
+    <div class="text-sm text-gray-500 mb-2">
+      👁️ Views: <span id="view-count">0</span>
+    </div>
+
+    <div class="flex items-center gap-4 mb-4">
+      👍 Likes: <span id="like-count">0</span>
+      💬 Comments: <span id="comment-count">0</span>
+    </div>
+
+    <div class="flex gap-2 mb-4">
+      <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" onclick="likePost()">Like</button>
+      <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600" onclick="toggleCommentBox()">Comment</button>
+    </div>
+
+    <div id="comment-box" class="hidden mb-4">
+      <input type="text" id="comment-input" placeholder="Write a comment..." class="border px-3 py-1 rounded w-full mb-2" />
+      <button class="bg-gray-800 text-white px-3 py-1 rounded hover:bg-gray-900" onclick="addComment()">Submit Comment</button>
+    </div>
+
+    <div id="comments" class="text-sm text-gray-700 space-y-1"></div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const postId = params.get('id');
+
+    async function fetchPost() {
+      try {
+        const res = await fetch(`/api/posts/${postId}`);
+        if (!res.ok) throw new Error('Post not found');
+        const post = await res.json();
+
+        document.getElementById('title').textContent = post.title;
+        document.getElementById('date').textContent = new Date(post.updatedAt).toLocaleString();
+        document.getElementById('content').textContent = post.content;
+        document.getElementById('view-count').textContent = post.views || 0;
+        document.getElementById('like-count').textContent = post.likes || 0;
+        document.getElementById('comment-count').textContent = post.comments?.length || 0;
+
+        const commentsDiv = document.getElementById('comments');
+        commentsDiv.innerHTML = (post.comments || []).map(c => `<p>• ${c}</p>`).join('');
+
+      } catch (err) {
+        document.body.innerHTML = '<p class="text-red-500 text-center">Post not found or failed to load.</p>';
+        console.error(err);
+      }
+    }
+
+    async function likePost() {
+      await fetch(`/api/posts/${postId}/like`, { method: 'POST' });
+      fetchPost(); // refresh
+    }
+
+    function toggleCommentBox() {
+      document.getElementById('comment-box').classList.toggle('hidden');
+    }
+
+    async function addComment() {
+      const comment = document.getElementById('comment-input').value;
+      if (!comment.trim()) return;
+
+      await fetch(`/api/posts/${postId}/comment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comment })
+      });
+
+      document.getElementById('comment-input').value = '';
+      fetchPost(); // refresh
+    }
+
+    fetchPost();
+  </script>
+</body>
+</html>
