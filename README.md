@@ -8,6 +8,7 @@ This is the core module of the **BlogCraft** platform — an internal blog creat
 - **Backend:** Spring Boot (Java 17), REST APIs
 - **Database:** MySQL
 - **Build Tool:** Maven
+- **Testing Tools:** JUnit, Mockito, MockMVC, JaCoCo 
 - **IDE:** Visual Studio Code
 
 ---
@@ -61,6 +62,9 @@ DRAFT → REVIEW → APPROVED → PUBLISHED
 | POST   | `/api/posts/{id}/comment`         | Add a review comment               |
 | GET    | `/api/posts/{id}/history`         | Get status history of a post       |
 | GET    | `/api/posts/status-summary`       | Dashboard metrics                  |
+| GET    | `/actuator/blogcraft/stats`       | Application statistics             |
+| GET    | `/actuator/blogcraft/health`      | Application health monitoring      |
+
 
 ---
 
@@ -77,13 +81,23 @@ DRAFT → REVIEW → APPROVED → PUBLISHED
 
 ---
 
-## 📌 Future Enhancements (Planned)
+## 📌 Additional Features Included :
+
+- Enhanced application monitoring using Spring Actuator endpoints
+- Comprehensive API documentation with SwaggerUI
+- The Service layer is covered by unit tests using JUnit and Mockito
+- Controller layer is covered by integration tests using Spring Boot’s MockMvc, ensuring our business logic and API endpoints work as expected.
+- Coverage testing and reporting using Jacoco
+
+---
+
+## 📌 Future Enhancements 
 
 - Secure login with role-based authentication  
 - Rich text editing  
 - Tagging and categorization  
 - Email or Slack-based notifications  
-- Author analytics and blog performance stats
+- Author analytics and blog performance stats 
 
 ---
 
@@ -110,3 +124,5 @@ DRAFT → REVIEW → APPROVED → PUBLISHED
 
 For questions or walkthroughs, feel free to contact:  
 📧 **Prasad Waster** — https://www.linkedin.com/in/prasadwaster/
+📧 **Piyush Bawaskar** — https://www.linkedin.com/in/piyush-bawaskar-a04199256/
+
